@@ -39,24 +39,28 @@ def clean_data(data):
 if __name__ == '__main__':
     with open('dtc.txt', 'r') as f:
         dtcs = f.readlines()
-    re_d = re.compile('<h2>.*Diagnostic.*</h2>(.+)<div class="register">',  re.DOTALL | re.I | re.M)
-    re_p = re.compile('<h2>.*Solutions.*</h2>(.+)<div class="register">',  re.DOTALL | re.I | re.M)
+    re_d = re.compile('<h2>.*Diagnostic.*</h2>(.+)<div class="register">',
+                      re.DOTALL | re.I | re.M)
 
-    with open('Possible_Solutions2.csv', 'w') as f:
+    re_p = re.compile('<h2>.*Solutions.*</h2>(.+)<div class="register">',
+                      re.DOTALL | re.I | re.M)
+
+    with open('Possible_Solutions.csv', 'w') as f:
         field_names = ['DTC', 'Possible Solutions']
         csv_writer = csv.DictWriter(f, fieldnames=field_names)
         csv_writer.writeheader()
-        for d in dtcs[1:]:
+        for d in dtcs[1:200]:
             c = {}
             url = 'https://www.obd-codes.com/{}'.format(d.strip('\n '))
             content = get(url)
             solutions = re.search(re_p, content)
             if not solutions:
                 solutions = re.search(re_d, content)
-            solutions = clean_data(solutions.group(1) if hasattr(solutions, 'group') else "")
+            from w3lib.html import  remove_tags
+            solutions = remove_tags(solutions.group(1) if hasattr(solutions, 'group') else "")
+            # solutions = clean_data(solutions.group(1) if hasattr(solutions, 'group') else "")
             csv_writer.writerow(
                 {'DTC': d, 'Possible Solutions': solutions.encode('utf-8')})
-
 
 
             print(d, solutions)
