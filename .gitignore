@@ -1,0 +1,5 @@
+.gitignore
+.idea
+.python-version
+.cache
+__pycache__
