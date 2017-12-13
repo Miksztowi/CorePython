@@ -34,6 +34,11 @@ def download_many(cc_list):
             print(msg.format(cc, future))
 
         results = []
+        # for future in to_do:
+        #     res = future.result()
+        #     msg = '{} result: {!r}'
+        #     print(msg.format(future, res))
+        #     results.append(res)  # Different from the below.
         for future in futures.as_completed(to_do):
             res = future.result()
             msg = '{} result: {!r}'
