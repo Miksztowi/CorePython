@@ -15,7 +15,7 @@ async def async_replace(file_name):
     loop = asyncio.get_event_loop()
     executor = concurrent.futures.ThreadPoolExecutor(5)
     loop.set_default_executor(executor)
-    loop.run_in_executor(None, replace_name, file_name)
+    loop.run_in_executor(executor, replace_name, file_name)
     executor.shutdown(wait=True)
 
 
